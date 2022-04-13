@@ -1,17 +1,19 @@
-import { View, Text, StyleSheet, SafeAreaView, Image, Dimensions, Pressable } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, Image, Dimensions, Pressable, ScrollView } from 'react-native'
 import React from 'react'
 
 const { width, height } = Dimensions.get('screen')
 
-const AppOnboarding = () => {
+const AppOnboarding = ({ navigation }) => {
   return (
     <SafeAreaView>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <Image source={require("../assets/images/onboarding.png")} style={styles.image} />
         <Text style={styles.title}>Control your daily energy consumptions</Text>
         <Text style={styles.note}>Always save your electrical energy needs to protect the earth</Text>
-        <Pressable style={styles.button}><Text style={styles.buttonText}>Getting started</Text></Pressable>
-      </View>
+        <Pressable style={styles.button} onPress={() => navigation.navigate('Home')}>
+          <Text style={styles.buttonText}>Getting started</Text>
+        </Pressable>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -20,13 +22,14 @@ export default AppOnboarding
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
   image: {
     width: width,
-    height: width
+    height: width,
   },
   title: {
     fontSize: 32,
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 30,
     width: width / 2,
-    marginTop: 50
+    marginTop: 40
   },
   buttonText: {
     color: '#ffff',

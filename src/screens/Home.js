@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, Image, ScrollView, Dimensions, Switch } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import BottomSheet from '@gorhom/bottom-sheet';
 import ProgressBar from '../components/ProgressBar'
+import BottomSheetContent from '../components/BottomSheetContent';
 
-const { width, height } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen')
 
 const Card = ({ source, title, devicesCount, toggle, onToggle }) => (
   <View style={[styles.card, { backgroundColor: toggle ? '#fff' : '#0d793c' }]}>
@@ -15,7 +17,7 @@ const Card = ({ source, title, devicesCount, toggle, onToggle }) => (
     <View style={styles.switchContent}>
       <Text style={[styles.cardTitle, toggle ? styles.inActiveText : styles.activeText]}>{toggle ? 'On' : 'Off'}</Text>
       <Switch
-        trackColor={{ false: "transparent", true: "transparent" }}
+        trackColor={{ false: "#dfede5", true: "#dfede5" }}
         thumbColor="#ffff"
         ios_backgroundColor="transparent"
         onValueChange={(value) => onToggle(value)}
@@ -38,7 +40,9 @@ const Home = () => {
     iron: true,
     fan: true
   })
+  const bottomSheetRef = useRef();
   const [consumption, setConsumption] = useState(Math.floor(Math.random() * 150) + 20)
+  const snapPoints = useMemo(() => ['5%', '70%'], []);
 
   const onToggle = (label, value) => [
     setDevices({
@@ -47,6 +51,10 @@ const Home = () => {
     }),
     setConsumption(!value ? consumption + 5 : consumption - 5)
   ]
+
+  const handleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -66,7 +74,7 @@ const Home = () => {
           />
         </View>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Card
             source={devices.bulb ? require("../assets/images/bulb.png") : require("../assets/images/bulb-alt.png")}
@@ -112,6 +120,16 @@ const Home = () => {
           />
         </View>
       </ScrollView>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <BottomSheetContent
+          consumption={consumption}
+        />
+      </BottomSheet>
     </SafeAreaView>
   )
 }
@@ -148,12 +166,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    // flex: 1,
     width: width,
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: 10,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingBottom: 20
   },
   card: {
     width: width / 2 - 30,

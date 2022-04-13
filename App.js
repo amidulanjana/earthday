@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/screens/Home';
 import AppOnboarding from './src/screens/AppOnboarding';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,10 +20,10 @@ const App = () => {
             headerShown: false
           }}
         >
-          {/* <Stack.Screen
+          <Stack.Screen
             name="AppOnboarding"
             component={AppOnboarding}
-          /> */}
+          />
           <Stack.Screen name="Home" component={Home} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -30,4 +31,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default gestureHandlerRootHOC(App);
